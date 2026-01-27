@@ -16,15 +16,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ascarafia.publictakehome.domain.model.Task
 import com.ascarafia.publictakehome.ui.mainscreen.components.TaskItemView
 import com.ascarafia.publictakehome.ui.theme.PublicTakeHomeTheme
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun MainRoot(
     modifier: Modifier = Modifier,
-    viewModel: MainViewModel = viewModel(),
+    viewModel: MainViewModel = koinViewModel(),
     onAction: (MainAction) -> Unit = {},
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()

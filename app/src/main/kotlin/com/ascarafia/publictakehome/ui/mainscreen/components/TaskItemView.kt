@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.ascarafia.publictakehome.domain.model.Task
@@ -33,6 +34,7 @@ fun TaskItemView(
         onClick = { onTaskClick(task) },
         modifier = modifier
             .padding(5.dp)
+            .alpha(if(task.isCompleted) 0.5f else 1f)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,

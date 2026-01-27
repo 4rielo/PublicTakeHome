@@ -2,13 +2,16 @@ package com.ascarafia.publictakehome.ui.mainscreen
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.ascarafia.publictakehome.domain.model.Task
+import com.ascarafia.publictakehome.domain.repositories.TaskRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
-class MainViewModel : ViewModel() {
+class MainViewModel(
+    private val taskRepository: TaskRepository
+) : ViewModel() {
 
     private var hasLoadedInitialData = false
 
@@ -17,9 +20,7 @@ class MainViewModel : ViewModel() {
         .onStart {
             if (!hasLoadedInitialData) {
                 /** Load initial data here **/
-                _state.value = _state.value.copy(
-                    tasks = getFakeTasks()
-                )
+                getRepositoryTasks()
 
                 hasLoadedInitialData = true
             }
@@ -32,31 +33,17 @@ class MainViewModel : ViewModel() {
 
     fun onAction(action: MainAction) {
         when (action) {
-            else -> TODO("Handle actions")
+            else -> {}
         }
     }
 
-    private fun getFakeTasks() = listOf(
-        Task(
-            id = "1",
-            title = "Task 1",
-            description = "Description 1",
-            isCompleted = false,
-            createdAt = "2023-01-01",
-        ),
-        Task(
-            id = "2",
-            title = "Task 2",
-            description = "Description 2, but this is waaaaay bigger, because it takes up to a few rows.",
-            isCompleted = false,
-            createdAt = "2023-01-01",
-        ),
-        Task(
-            id = "3",
-            title = "Task 3",
-            description = "Description 3, and yes, this is slightly larger than the first one.",
-            isCompleted = false,
-            createdAt = "2023-01-01",
-        ),
-    )
+    private fun getRepositoryTasks() {
+        viewModelScope.launch {
+            taskRepository.getTasks().collect {
+                _state.value = _state.value.copy(
+                    tasks = it.sortedBy { it.isCompleted }
+                )
+            }
+        }
+    }
 }
