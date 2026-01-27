@@ -4,6 +4,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+
+    alias(libs.plugins.serialization)
 }
 
 android {
@@ -54,12 +56,16 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(libs.jetbrains.compose.navigation)
+    implementation(libs.kotlinx.serialization.json)
+
+    implementation(libs.androidx.compose.materialIcons)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.lifecycle.viewmodelCompose)
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
-    implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+
+    debugImplementation(libs.androidx.compose.ui.tooling)
 }

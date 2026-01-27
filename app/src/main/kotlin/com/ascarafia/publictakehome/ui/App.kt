@@ -16,7 +16,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.ascarafia.publictakehome.ui.theme.AppTheme
+import com.ascarafia.publictakehome.ui.mainscreen.MainRoot
+import com.ascarafia.publictakehome.ui.navigation.FloatingAction
+import com.ascarafia.publictakehome.ui.navigation.NavigationIndex
+import com.ascarafia.publictakehome.ui.theme.PublicTakeHomeTheme
 import com.publicapp.takehome.R as Res
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -24,7 +27,7 @@ import com.publicapp.takehome.R as Res
 fun App() {
     val navController = rememberNavController()
 
-    AppTheme {
+    PublicTakeHomeTheme {
         Scaffold(
             contentWindowInsets = WindowInsets.safeDrawing,
             topBar = {
@@ -40,16 +43,22 @@ fun App() {
                     }
                 )
             },
+            floatingActionButton = {
+                FloatingAction(
+                    navController = navController
+                )
+            },
             modifier = Modifier.fillMaxSize()
         ) { innerPadding ->
             NavHost(
                 navController = navController,
-                startDestination = "home",
+                startDestination = NavigationIndex.Home,
                 modifier = Modifier
                     .padding(innerPadding)
+                    .fillMaxSize()
             ) {
-                composable("home") {
-                    Text("Hello")
+                composable<NavigationIndex.Home> {
+                    MainRoot(modifier = Modifier.fillMaxSize())
                 }
             }
         }
