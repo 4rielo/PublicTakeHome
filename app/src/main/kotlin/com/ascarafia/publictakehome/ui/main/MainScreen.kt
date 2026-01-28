@@ -64,7 +64,7 @@ fun MainRoot(
                         onAction(MainAction.OnTaskClick(null))
                     }
                 )
-                .blur(if(state.showTaskPopUp != null) 10.dp else 0.dp)
+                .blur(if (state.showTaskPopUp != null) 10.dp else 0.dp)
         )
 
         AnimatedVisibility (
@@ -77,6 +77,10 @@ fun MainRoot(
                     task = task,
                     onTaskClick = {},
                     onTaskLongClick = {},
+                    enableClick = false,
+                    showTaskCompletedToggle = true,
+                    onTaskCompletedToggle = { onAction(MainAction.OnTaskCompletedToggle(it)) },
+                    onEditTaskClicked = { onAction(MainAction.OnEditTaskClick(it.id)) },
                     modifier = Modifier
                         .padding(50.dp)
                         .fillMaxSize()
@@ -119,7 +123,9 @@ fun MainScreen(
             }
 
             LaunchedEffect(showGoBackUpButton) {
-                onAction(MainAction.HideCreateTask(showGoBackUpButton))
+                if (state.showTaskPopUp == null) {
+                    onAction(MainAction.HideCreateTask(showGoBackUpButton))
+                }
             }
 
             LazyVerticalStaggeredGrid(
@@ -162,7 +168,6 @@ fun MainScreen(
                     )
                 }
             }
-
         }
     }
 }

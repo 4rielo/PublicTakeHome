@@ -22,7 +22,6 @@ class MainViewModel(
             if (!hasLoadedInitialData) {
                 /** Load initial data here **/
                 getRepositoryTasks()
-
                 hasLoadedInitialData = true
             }
         }
@@ -44,15 +43,23 @@ class MainViewModel(
                     showTaskPopUp = showTask
                 )
             }
+            is MainAction.OnTaskCompletedToggle -> {
+                viewModelScope.launch {
+                    val updatedTask = action.task.copy(isCompleted = !action.task.isCompleted)
+                    taskRepository.upsertTask(updatedTask)
+                }
+            }
             else -> {}
         }
     }
 
     private fun getRepositoryTasks() {
         viewModelScope.launch {
-            taskRepository.getTasks().collect {
+            taskRepository.getTasks().collect { tasks ->
+                val showTaskPopUp = tasks.find { it.id == _state.value.showTaskPopUp?.id }
                 _state.value = _state.value.copy(
-                    tasks = it.sortedBy { it.isCompleted }
+                    tasks = tasks.sortedBy { it.isCompleted },
+                    showTaskPopUp = showTaskPopUp
                 )
             }
         }

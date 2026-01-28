@@ -74,6 +74,9 @@ fun App() {
                                 is MainAction.HideCreateTask -> {
                                     hideCreateTaskButton = action.hide
                                 }
+                                is MainAction.OnEditTaskClick -> {
+                                    navController.navigate(NavigationIndex.CreateTask(action.taskId))
+                                }
                                 else -> mainViewModel.onAction(action)
                             }
                         }
