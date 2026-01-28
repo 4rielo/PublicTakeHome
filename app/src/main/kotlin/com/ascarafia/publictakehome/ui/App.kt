@@ -24,6 +24,7 @@ import com.ascarafia.publictakehome.ui.create_task.CreateTaskRoot
 import com.ascarafia.publictakehome.ui.create_task.CreateTaskViewModel
 import com.ascarafia.publictakehome.ui.main.MainAction
 import com.ascarafia.publictakehome.ui.main.MainRoot
+import com.ascarafia.publictakehome.ui.main.MainViewModel
 import com.ascarafia.publictakehome.ui.navigation.FloatingAction
 import com.ascarafia.publictakehome.ui.navigation.NavigationIndex
 import com.ascarafia.publictakehome.ui.navigation.TopBar
@@ -65,6 +66,7 @@ fun App() {
                     .fillMaxSize()
             ) {
                 composable<NavigationIndex.Home> {
+                    val mainViewModel: MainViewModel = koinViewModel()
                     MainRoot(
                         modifier = Modifier.fillMaxSize(),
                         onAction = { action ->
@@ -72,6 +74,7 @@ fun App() {
                                 is MainAction.HideCreateTask -> {
                                     hideCreateTaskButton = action.hide
                                 }
+                                else -> mainViewModel.onAction(action)
                             }
                         }
                     )

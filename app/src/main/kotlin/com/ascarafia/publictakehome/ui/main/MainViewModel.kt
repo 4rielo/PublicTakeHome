@@ -2,6 +2,7 @@ package com.ascarafia.publictakehome.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ascarafia.publictakehome.domain.model.Task
 import com.ascarafia.publictakehome.domain.repositories.TaskRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -33,6 +34,16 @@ class MainViewModel(
 
     fun onAction(action: MainAction) {
         when (action) {
+            is MainAction.OnTaskClick -> {
+                val showTask: Task? = if(_state.value.showTaskPopUp != null) {
+                    null
+                } else {
+                    _state.value.tasks.find { it.id == action.taskId }
+                }
+                _state.value = _state.value.copy(
+                    showTaskPopUp = showTask
+                )
+            }
             else -> {}
         }
     }

@@ -1,6 +1,10 @@
 package com.ascarafia.publictakehome.ui.main
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -23,13 +27,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.transition.Transition
 import com.ascarafia.publictakehome.domain.model.Task
 import com.ascarafia.publictakehome.ui.main.components.TaskItemView
 import com.ascarafia.publictakehome.ui.theme.PublicTakeHomeTheme
@@ -50,7 +58,33 @@ fun MainRoot(
             state = state,
             onAction = onAction,
             modifier = modifier
+                .clickable(
+                    enabled = state.showTaskPopUp != null,
+                    onClick = {
+                        onAction(MainAction.OnTaskClick(null))
+                    }
+                )
+                .blur(if(state.showTaskPopUp != null) 10.dp else 0.dp)
         )
+
+        AnimatedVisibility (
+            state.showTaskPopUp != null,
+            enter = scaleIn(),
+            exit = scaleOut()
+        ) {
+            state.showTaskPopUp?.let { task ->
+                TaskItemView(
+                    task = task,
+                    onTaskClick = {},
+                    onTaskLongClick = {},
+                    modifier = Modifier
+                        .padding(50.dp)
+                        .fillMaxSize()
+                        .align(Alignment.Center)
+                )
+                onAction(MainAction.HideCreateTask(true))
+            } ?: onAction(MainAction.HideCreateTask(false))
+        }
 
         if (state.isLoading) {
             CircularProgressIndicator(
@@ -92,10 +126,12 @@ fun MainScreen(
                 state = verticalScrollState,
                 columns = StaggeredGridCells.Fixed(2)
             ) {
-                items(state.tasks, { it.id }) {
+                items(state.tasks, { it.id }) { task ->
                     TaskItemView(
-                        task = it,
-                        onTaskClick = {},
+                        task = task,
+                        onTaskClick = {
+                            onAction(MainAction.OnTaskClick(task.id))
+                        },
                         onTaskLongClick = {},
                         modifier = Modifier
                             .sizeIn(maxWidth = 200.dp, maxHeight = 300.dp)
@@ -160,6 +196,7 @@ private fun Preview() {
             ),
         )
     )
+
     PublicTakeHomeTheme {
         MainScreen(
             state = mainState,
