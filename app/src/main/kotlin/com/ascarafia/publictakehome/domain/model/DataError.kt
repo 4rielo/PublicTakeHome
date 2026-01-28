@@ -10,7 +10,6 @@ sealed interface DataError: TaskAppError {
         UNAUTHORIZED,
         FORBIDDEN,
         NOT_FOUND,
-        NO_TOKEN,
         UNKNOWN
     }
 

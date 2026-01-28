@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -32,7 +33,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ascarafia.publictakehome.ui.theme.PublicTakeHomeTheme
 import org.koin.compose.viewmodel.koinViewModel
-import com.publicapp.takehome.R as Res
+import com.publicapp.takehome.R
 
 @Composable
 fun CreateTaskRoot(
@@ -48,6 +49,7 @@ fun CreateTaskRoot(
             state = state,
             onAction = onAction,
             modifier = modifier
+                .blur(if(state.isLoading) 10.dp else 0.dp)
         )
 
         if (state.isLoading) {
@@ -131,7 +133,7 @@ fun CreateTaskScreen(
                 }
             ) {
                 Text(
-                    stringResource(Res.string.create_new_task_cancel),
+                    stringResource(R.string.create_new_task_cancel),
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
@@ -148,7 +150,7 @@ fun CreateTaskScreen(
                 },
             ) {
                 Text(
-                stringResource(Res.string.create_new_task_save),
+                stringResource(R.string.create_new_task_save),
                     color = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }

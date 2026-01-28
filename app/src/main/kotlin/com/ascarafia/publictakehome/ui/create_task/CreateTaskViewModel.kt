@@ -4,12 +4,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.ascarafia.publictakehome.domain.model.DataError
 import com.ascarafia.publictakehome.domain.model.Task
 import com.ascarafia.publictakehome.domain.model.Result
 import com.ascarafia.publictakehome.domain.repositories.TaskRepository
 import com.ascarafia.publictakehome.ui.navigation.NavigationIndex
 import com.ascarafia.publictakehome.ui.util.UserEvent
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.onStart
@@ -18,6 +20,7 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.util.UUID
+import kotlin.random.Random
 
 class CreateTaskViewModel(
     private val taskRepository: TaskRepository,
@@ -28,8 +31,8 @@ class CreateTaskViewModel(
 
     val taskId = savedStateHandle.toRoute<NavigationIndex.CreateTask>().taskId
 
-    private val _screenActions = Channel<UserEvent>()
-    val screenActions = _screenActions.receiveAsFlow()
+    private val _screenEvents = Channel<UserEvent>()
+    val screenEvents = _screenEvents.receiveAsFlow()
 
     private val _state = MutableStateFlow(CreateTaskState())
     val state = _state
@@ -66,28 +69,58 @@ class CreateTaskViewModel(
             }
             is CreateTaskAction.OnSaveClicked -> {
                 viewModelScope.launch {
-                    val task = taskId?.let {
-                        taskRepository.getTask(taskId)
-                    }
-                    val upsertResponse = taskRepository.upsertTask(
-                        task?.copy(
-                            title = _state.value.title,
-                            description = _state.value.description
-                        ) ?: Task(
-                            id = UUID.randomUUID().toString(),
-                            title = _state.value.title,
-                            description = _state.value.description,
-                            createdAt = LocalDateTime.now().toString()
-                        )
+                    val simulatedDelay = Random.nextLong(500, 2500)
+
+                    _state.value = _state.value.copy(
+                        isLoading = true
                     )
-                    when(upsertResponse) {
-                        is Result.Success -> {
-                            _screenActions.send(UserEvent.GoBack)
+
+                    delay(simulatedDelay)
+
+                    val success = Random.nextInt(0,4)
+
+                    if(success == 0) {
+                        val randomError = Random.nextInt(0,9)
+                        val error = when (randomError) {
+                            0 -> DataError.Local.DISK_FULL
+                            1 -> DataError.Remote.SERVER
+                            2 -> DataError.Remote.NOT_FOUND
+                            3 -> DataError.Remote.UNAUTHORIZED
+                            4 -> DataError.Remote.REQUEST_TIMEOUT
+                            5 -> DataError.Remote.TOO_MANY_REQUESTS
+                            6 -> DataError.Remote.NO_INTERNET
+                            7 -> DataError.Remote.SERIALIZATION
+                            else -> DataError.Remote.UNKNOWN
                         }
-                        is Result.Error -> {
-                            _screenActions.send(UserEvent.DataError(upsertResponse.error))
+                        _screenEvents.trySend(UserEvent.DataError(error))
+                    } else {
+                        val task = taskId?.let {
+                            taskRepository.getTask(taskId)
+                        }
+                        val upsertResponse = taskRepository.upsertTask(
+                            task?.copy(
+                                title = _state.value.title,
+                                description = _state.value.description
+                            ) ?: Task(
+                                id = UUID.randomUUID().toString(),
+                                title = _state.value.title,
+                                description = _state.value.description,
+                                createdAt = LocalDateTime.now().toString()
+                            )
+                        )
+                        when(upsertResponse) {
+                            is Result.Success -> {
+                                _screenEvents.send(UserEvent.GoBack)
+                            }
+                            is Result.Error -> {
+                                _screenEvents.send(UserEvent.DataError(upsertResponse.error))
+                            }
                         }
                     }
+
+                    _state.value = _state.value.copy(
+                        isLoading = false
+                    )
                 }
             }
             else -> Unit
