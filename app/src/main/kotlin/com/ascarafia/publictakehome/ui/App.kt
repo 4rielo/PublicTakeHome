@@ -7,7 +7,10 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LifecycleResumeEffect
@@ -19,6 +22,7 @@ import androidx.navigation.compose.rememberNavController
 import com.ascarafia.publictakehome.ui.create_task.CreateTaskAction
 import com.ascarafia.publictakehome.ui.create_task.CreateTaskRoot
 import com.ascarafia.publictakehome.ui.create_task.CreateTaskViewModel
+import com.ascarafia.publictakehome.ui.main.MainAction
 import com.ascarafia.publictakehome.ui.main.MainRoot
 import com.ascarafia.publictakehome.ui.navigation.FloatingAction
 import com.ascarafia.publictakehome.ui.navigation.NavigationIndex
@@ -33,6 +37,8 @@ import org.koin.compose.viewmodel.koinViewModel
 fun App() {
     val navController = rememberNavController()
 
+    var hideCreateTaskButton by remember { mutableStateOf(false) }
+
     PublicTakeHomeTheme {
         Scaffold(
             contentWindowInsets = WindowInsets.safeDrawing,
@@ -45,7 +51,8 @@ fun App() {
             },
             floatingActionButton = {
                 FloatingAction(
-                    navController = navController
+                    navController = navController,
+                    hideFab = hideCreateTaskButton
                 )
             },
             modifier = Modifier.fillMaxSize()
@@ -59,7 +66,14 @@ fun App() {
             ) {
                 composable<NavigationIndex.Home> {
                     MainRoot(
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier.fillMaxSize(),
+                        onAction = { action ->
+                            when (action) {
+                                is MainAction.HideCreateTask -> {
+                                    hideCreateTaskButton = action.hide
+                                }
+                            }
+                        }
                     )
                 }
 

@@ -1,5 +1,6 @@
 package com.ascarafia.publictakehome.ui.navigation
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
@@ -22,33 +23,44 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.publicapp.takehome.R as Res
 
 @Composable
-fun FloatingAction(navController: NavController) {
+fun FloatingAction(
+    navController: NavController,
+    hideFab: Boolean = false
+) {
     val backStackEntry: NavBackStackEntry? by navController.currentBackStackEntryAsState()
 
     when {
         backStackEntry?.destination?.hasRoute<NavigationIndex.Home>() == true -> {
-            FloatingActionButton(
-                onClick = {
-                    navController.navigate(NavigationIndex.CreateTask())
-                },
-                containerColor = MaterialTheme.colorScheme.primaryContainer,
-                modifier = Modifier
-                    .border(1.dp, MaterialTheme.colorScheme.onPrimaryContainer, MaterialTheme.shapes.medium)
+            AnimatedVisibility(
+                visible = !hideFab
             ) {
-                Column (
+                FloatingActionButton(
+                    onClick = {
+                        navController.navigate(NavigationIndex.CreateTask())
+                    },
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
                     modifier = Modifier
-                        .padding(8.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
+                        .border(
+                            1.dp,
+                            MaterialTheme.colorScheme.onPrimaryContainer,
+                            MaterialTheme.shapes.medium
+                        )
                 ) {
-                    Icon(
-                        Icons.Filled.Add,
-                        contentDescription = "Create Task",
-                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
-                    )
-                    Text(
-                        stringResource(Res.string.task_list_create_new_task),
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
-                    )
+                    Column(
+                        modifier = Modifier
+                            .padding(8.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            Icons.Filled.Add,
+                            contentDescription = "Create Task",
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                        )
+                        Text(
+                            stringResource(Res.string.task_list_create_new_task),
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
+                        )
+                    }
                 }
             }
         }

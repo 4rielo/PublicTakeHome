@@ -1,16 +1,30 @@
 package com.ascarafia.publictakehome.ui.main
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.items
+import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowCircleUp
+import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,6 +33,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ascarafia.publictakehome.domain.model.Task
 import com.ascarafia.publictakehome.ui.main.components.TaskItemView
 import com.ascarafia.publictakehome.ui.theme.PublicTakeHomeTheme
+import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -58,18 +73,60 @@ fun MainScreen(
         modifier = modifier
             .fillMaxSize()
     ) {
-        LazyVerticalStaggeredGrid(
-            columns = StaggeredGridCells.Fixed(2)
+        Box(
+            modifier = Modifier
+                .weight(1f)
         ) {
-            items(state.tasks, { it.id } ) {
-                TaskItemView(
-                    task = it,
-                    onTaskClick = {},
-                    onTaskLongClick = {},
-                    modifier = Modifier
-                        .sizeIn(maxWidth = 200.dp, maxHeight = 300.dp)
-                )
+            val verticalScrollState = rememberLazyStaggeredGridState()
+            val showGoBackUpButton by remember {
+                derivedStateOf {
+                    verticalScrollState.firstVisibleItemIndex > 0
+                }
             }
+
+            LaunchedEffect(showGoBackUpButton) {
+                onAction(MainAction.HideCreateTask(showGoBackUpButton))
+            }
+
+            LazyVerticalStaggeredGrid(
+                state = verticalScrollState,
+                columns = StaggeredGridCells.Fixed(2)
+            ) {
+                items(state.tasks, { it.id }) {
+                    TaskItemView(
+                        task = it,
+                        onTaskClick = {},
+                        onTaskLongClick = {},
+                        modifier = Modifier
+                            .sizeIn(maxWidth = 200.dp, maxHeight = 300.dp)
+                    )
+                }
+            }
+
+            val lifecycleScope = rememberCoroutineScope()
+            this@Column.AnimatedVisibility(
+                visible = showGoBackUpButton,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+            ) {
+                Surface(
+                    shape = MaterialTheme.shapes.small,
+                    color = MaterialTheme.colorScheme.secondaryContainer,
+                    onClick = {
+                        lifecycleScope.launch {
+                            verticalScrollState.animateScrollToItem(0)
+                        }
+                    }
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.ArrowUpward,
+                        contentDescription = "go back up",
+                        modifier = Modifier
+                            .padding(16.dp)
+                    )
+                }
+            }
+
         }
     }
 }
