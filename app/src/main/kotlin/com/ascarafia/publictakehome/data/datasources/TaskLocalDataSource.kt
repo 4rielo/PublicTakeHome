@@ -1,54 +1,39 @@
 package com.ascarafia.publictakehome.data.datasources
 
+import androidx.sqlite.SQLiteException
+import com.ascarafia.publictakehome.data.database.TaskDao
+import com.ascarafia.publictakehome.data.database.TaskEntity
 import com.ascarafia.publictakehome.domain.datasources.TaskDataSource
-import com.ascarafia.publictakehome.domain.model.Task
+import com.ascarafia.publictakehome.domain.model.DataError
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
 
-class TaskLocalDataSource: TaskDataSource {
-    val tasks = mutableListOf<Task>(
-        Task(
-            id = "1",
-            title = "Task 1",
-            description = "Description 1",
-            isCompleted = false,
-            createdAt = "2023-01-01",
-        ),
-        Task(
-            id = "2",
-            title = "Task 2",
-            description = "Description 2, but this is waaaaay bigger, because it takes up to a few rows.",
-            isCompleted = false,
-            createdAt = "2023-01-01",
-        ),
-        Task(
-            id = "3",
-            title = "Task 3",
-            description = "Description 3, and yes, this is slightly larger than the first one.",
-            isCompleted = true,
-            createdAt = "2023-01-01",
-        ),
-        Task(
-            id = "4",
-            title = "Task 4",
-            description = "Description 4, yet another task.",
-            isCompleted = false,
-            createdAt = "2023-01-01",
-        ),
-    )
-    override fun getTasks(): Flow<List<Task>> {
-        return flowOf(tasks)
+class TaskLocalDataSource(
+    private val taskDao: TaskDao
+): TaskDataSource {
+
+    override fun getTasks(): Flow<List<TaskEntity>> {
+        return taskDao.getTasks()
     }
 
-    override suspend fun getTask(id: String): Task? {
-        return tasks.find { it.id == id }
+    override suspend fun getTask(id: String): TaskEntity? {
+        return taskDao.getTask(id)
     }
 
-    override suspend fun upsertTask(task: Task) {
-        tasks.add(task)
+    override suspend fun upsertTask(task: TaskEntity): Result<DataError?> {
+        try {
+            taskDao.upsertTask(task)
+            return Result.success(null)
+        } catch(e: SQLiteException) {
+            return Result.success(DataError.Local.DISK_FULL)
+        }
     }
 
-    override suspend fun deleteTask(id: String) {
-        tasks.removeIf { it.id == id }
+    override suspend fun deleteTask(id: String): Result<DataError?> {
+        try {
+            taskDao.deleteTask(id)
+            return Result.success(null)
+        } catch(e: SQLiteException) {
+            return Result.success(DataError.Local.DISK_FULL)
+        }
     }
 }

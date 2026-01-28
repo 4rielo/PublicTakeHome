@@ -6,6 +6,9 @@ plugins {
     alias(libs.plugins.kotlin.compose)
 
     alias(libs.plugins.serialization)
+
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.room)
 }
 
 android {
@@ -45,6 +48,10 @@ android {
     buildFeatures {
         compose = true
     }
+
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
 }
 
 dependencies {
@@ -71,6 +78,10 @@ dependencies {
     implementation(libs.koin.compose)
     implementation(libs.koin.compose.viewmodel)
     implementation(libs.koin.compose.navigation)
+
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.sqlite.bundled)
+    add("ksp", libs.androidx.room.compiler)
 
     debugImplementation(libs.androidx.compose.ui.tooling)
 }

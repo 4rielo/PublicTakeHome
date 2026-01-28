@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">PublicTakeHome</string>
+    <string name="go_back">Go Back</string>
 
     <string name="task_list_create_new_task">Create new Task</string>
+
+    <string name="create_new_task_cancel">Cancel</string>
+    <string name="create_new_task_save">Create Task</string>
+
 </resources>

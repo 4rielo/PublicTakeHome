@@ -1,4 +1,4 @@
-package com.ascarafia.publictakehome.ui.mainscreen
+package com.ascarafia.publictakehome.ui.main
 
 import com.ascarafia.publictakehome.domain.model.Task
 

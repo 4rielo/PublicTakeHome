@@ -29,7 +29,7 @@ fun FloatingAction(navController: NavController) {
         backStackEntry?.destination?.hasRoute<NavigationIndex.Home>() == true -> {
             FloatingActionButton(
                 onClick = {
-
+                    navController.navigate(NavigationIndex.CreateTask())
                 },
                 containerColor = MaterialTheme.colorScheme.primaryContainer,
                 modifier = Modifier

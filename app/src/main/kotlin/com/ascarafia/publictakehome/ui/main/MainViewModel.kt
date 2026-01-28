@@ -1,4 +1,4 @@
-package com.ascarafia.publictakehome.ui.mainscreen
+package com.ascarafia.publictakehome.ui.main
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

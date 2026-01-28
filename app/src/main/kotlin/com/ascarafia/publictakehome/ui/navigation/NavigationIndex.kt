@@ -9,5 +9,5 @@ sealed interface NavigationIndex {
     object Home : NavigationIndex
 
     @Serializable
-    object CreateTask : NavigationIndex
+    data class CreateTask(val taskId: String? = null) : NavigationIndex
 }

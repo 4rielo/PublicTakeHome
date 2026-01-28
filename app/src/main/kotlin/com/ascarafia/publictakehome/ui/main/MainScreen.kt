@@ -1,4 +1,4 @@
-package com.ascarafia.publictakehome.ui.mainscreen
+package com.ascarafia.publictakehome.ui.main
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -17,7 +17,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ascarafia.publictakehome.domain.model.Task
-import com.ascarafia.publictakehome.ui.mainscreen.components.TaskItemView
+import com.ascarafia.publictakehome.ui.main.components.TaskItemView
 import com.ascarafia.publictakehome.ui.theme.PublicTakeHomeTheme
 import org.koin.compose.viewmodel.koinViewModel
 
