@@ -27,6 +27,7 @@ Good luck & please feel free to reach out with any questions!
 ---
 * Light/Dark theming
 * Adaptive design: Orientation responsiveness with grid columns count depending on device and layout (phone, tablet, desktop, portrait or landscape)
+* Multi Language configuration (english / spanish at the moment), depending on device's language config.
 * DeviceFirst repository implementation, and sync with remote
 * Search bar to filter by either Title or Description
 * Pinned/Unpinned tasks lists
@@ -48,14 +49,18 @@ Good luck & please feel free to reach out with any questions!
 * Compose for UI
 * Animations for a better user experience / components transition
 * Compose Navigation
+* Side effects
 * Coroutines
 * Flow / StateFlow / Channels for reactive development.
 * Material design
 * IME action on TextFields
+* Unit test for syncing algorithm
 
 ## Design considerations:
 
 # Clean Architecture / Onion layering and SOLID principles
+
+* MVI design pattern
 
 * application: Main Application and dependency injection framework
 * domain: Business basics, with interfaces for dependency inversion (Objects depend on abstractions)

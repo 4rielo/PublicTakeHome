@@ -6,6 +6,7 @@ import com.ascarafia.publictakehome.domain.model.Result
 import com.ascarafia.publictakehome.domain.model.Task
 import com.ascarafia.publictakehome.domain.repositories.TaskRepository
 import com.ascarafia.publictakehome.domain.use_cases.DateTimeUtils
+import com.ascarafia.publictakehome.domain.use_cases.ListSortingUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -100,52 +101,7 @@ class TaskRepositoryImpl(
                 val localTasksList = localTasks.data
                 val remoteTasksList = remoteTasks.data
 
-                val remoteTasksToUpdate = mutableListOf<Task>()
-                val localTasksToUpdate = mutableListOf<Task>()
-
-                for (localTask in localTasksList) {
-                    val matchingRemoteTask = remoteTasksList.firstOrNull { it.id == localTask.id }
-                    matchingRemoteTask?.let {
-                        val localLastUpdated = DateTimeUtils.fromIsoString(localTask.lastUpdated)
-                        val remoteLastUpdated = DateTimeUtils.fromIsoString(matchingRemoteTask.lastUpdated)
-
-                        remoteLastUpdated?.let {
-                            if( (localLastUpdated?.compareTo(remoteLastUpdated) ?: -1) > 0 ) {
-                                remoteTasksToUpdate.add(localTask)
-                            } else {
-                                localTasksToUpdate.add(matchingRemoteTask)
-                            }
-                        } ?: run {
-                            val localLastUpdated = DateTimeUtils.toIsoString(Clock.System.now())
-                            localTasksToUpdate.add( matchingRemoteTask.copy(lastUpdated = localLastUpdated ) )
-                        }
-
-                    } ?: run {
-                        remoteTasksToUpdate.add(localTask)
-                    }
-                }
-
-                for (remoteTask in remoteTasksList) {
-                    val matchingLocalTask = localTasksList.firstOrNull { it.id == remoteTask.id }
-                    matchingLocalTask?.let {
-                        val localLastUpdated = DateTimeUtils.fromIsoString(matchingLocalTask.lastUpdated)
-                        val remoteLastUpdated = DateTimeUtils.fromIsoString(remoteTask.lastUpdated)
-
-                        remoteLastUpdated?.let {
-                            if ((localLastUpdated?.compareTo(remoteLastUpdated) ?: -1) > 0) {
-                                remoteTasksToUpdate.add(matchingLocalTask)
-                            } else {
-                                localTasksToUpdate.add(matchingLocalTask)
-                            }
-                        } ?: run {
-                            val localLastUpdated = DateTimeUtils.toIsoString(Clock.System.now())
-                            localTasksToUpdate.add(matchingLocalTask.copy(lastUpdated = localLastUpdated))
-                        }
-
-                    } ?: run {
-                        localTasksToUpdate.add(remoteTask)
-                    }
-                }
+                val (localTasksToUpdate, remoteTasksToUpdate) = ListSortingUseCase.getTasksToUpdate(localTasksList, remoteTasksList)
 
                 for (remoteTask in remoteTasksToUpdate) {
                     tasksRemoteDataSource.upsertTask(remoteTask)
