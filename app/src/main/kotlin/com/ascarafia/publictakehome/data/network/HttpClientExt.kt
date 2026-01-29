@@ -19,8 +19,6 @@ suspend inline fun <reified T> safeCall(
         execute()
     } catch(e: SocketTimeoutException) {
         return Result.Error(DataError.Remote.REQUEST_TIMEOUT)
-    } catch (e: CancellationException) {
-        return Result.Error(DataError.Remote.REQUEST_TIMEOUT)
     } catch (e: UnresolvedAddressException) {
         return Result.Error(DataError.Remote.NO_INTERNET)
     } catch (e: Exception) {
