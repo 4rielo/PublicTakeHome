@@ -33,9 +33,7 @@ object ListSortingUseCase {
         for (localTask in localTasksList) {
             val matchingRemoteTask = remoteTasksList.firstOrNull { it.id == localTask.id }
             matchingRemoteTask?.let {
-                when(
-                    addToListBasedOnLastUpdated(localTask, matchingRemoteTask)
-                ) {
+                when( addToListBasedOnLastUpdated(localTask, matchingRemoteTask) ) {
                     AddToList.LOCAL -> localTasksToUpdate.add(matchingRemoteTask)
                     AddToList.REMOTE -> remoteTasksToUpdate.add(matchingRemoteTask)
                     AddToList.LOCAL_UPDATING_TIME -> {
@@ -53,9 +51,7 @@ object ListSortingUseCase {
         for (remoteTask in remoteTasksList) {
             val matchingLocalTask = localTasksList.firstOrNull { it.id == remoteTask.id }
             matchingLocalTask?.let {
-                when(
-                    addToListBasedOnLastUpdated(matchingLocalTask, remoteTask)
-                ) {
+                when( addToListBasedOnLastUpdated(matchingLocalTask, remoteTask) ) {
                     AddToList.LOCAL -> localTasksToUpdate.add(matchingLocalTask)
                     AddToList.REMOTE -> remoteTasksToUpdate.add(matchingLocalTask)
                     AddToList.LOCAL_UPDATING_TIME -> {

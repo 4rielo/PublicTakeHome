@@ -54,6 +54,7 @@ Good luck & please feel free to reach out with any questions!
 * Flow / StateFlow / Channels for reactive development.
 * Material design
 * IME action on TextFields
+* Unit test for syncing algorithm
 
 ## Design considerations:
 
