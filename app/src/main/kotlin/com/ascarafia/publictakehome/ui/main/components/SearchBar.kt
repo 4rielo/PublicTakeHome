@@ -23,6 +23,7 @@ import com.publicapp.takehome.R
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     searchHint: String = stringResource(R.string.task_list_search_hint),
     searchQuery: String,
     onSearchQueryChange: (String) -> Unit,
@@ -71,6 +72,7 @@ fun SearchBar(
         keyboardOptions = KeyboardOptions(
             imeAction = ImeAction.Search
         ),
+        enabled = enabled,
         modifier = modifier
             .background(
                 shape = RoundedCornerShape(100),

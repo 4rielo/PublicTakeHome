@@ -123,6 +123,7 @@ fun MainScreen(
                 modifier = Modifier
                     .padding(10.dp)
                     .fillMaxWidth(),
+                enabled = state.showTaskPopUp == null,
                 searchQuery = state.searchQuery,
                 onSearchQueryChange = { onAction(MainAction.OnSearchQueryChange(it)) },
                 onImeSearch = { onAction(MainAction.OnSearchQueryChange(it)) }
