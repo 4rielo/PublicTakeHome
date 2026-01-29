@@ -28,6 +28,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -60,21 +62,45 @@ fun MainRoot(
     onAction: (MainAction) -> Unit = {},
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    val layout = DeviceConfiguration.fromWindowSizeClass(windowSizeClass)
+
+    val staggeredColumns = when(layout) {
+        DeviceConfiguration.MOBILE_PORTRAIT -> 2
+        DeviceConfiguration.MOBILE_LANDSCAPE -> 3
+        DeviceConfiguration.TABLET_PORTRAIT -> 4
+        DeviceConfiguration.TABLET_LANDSCAPE -> 6
+        DeviceConfiguration.DESKTOP -> 8
+    }
+
     Box(
         modifier = modifier
     ) {
-        MainScreen(
-            state = state,
-            onAction = onAction,
+        val pullToRefreshState = rememberPullToRefreshState()
+
+        PullToRefreshBox(
+            isRefreshing = false,
+            onRefresh = {
+                onAction(MainAction.OnRefresh)
+            },
+            state = pullToRefreshState,
             modifier = modifier
-                .clickable(
-                    enabled = state.showTaskPopUp != null,
-                    onClick = {
-                        onAction(MainAction.OnTaskClick(null))
-                    }
-                )
-                .blur(if (state.showTaskPopUp != null) 10.dp else 0.dp)
-        )
+        ) {
+            MainScreen(
+                state = state,
+                onAction = onAction,
+                gridColumns = staggeredColumns,
+                modifier = modifier
+                    .clickable(
+                        enabled = state.showTaskPopUp != null,
+                        onClick = {
+                            onAction(MainAction.OnTaskClick(null))
+                        }
+                    )
+                    .blur(if (state.showTaskPopUp != null || state.isLoading) 10.dp else 0.dp)
+            )
+        }
 
         AnimatedVisibility (
             state.showTaskPopUp != null,
@@ -110,21 +136,11 @@ fun MainRoot(
 
 @Composable
 fun MainScreen(
+    modifier: Modifier = Modifier,
     state: MainState,
     onAction: (MainAction) -> Unit,
-    modifier: Modifier = Modifier,
+    gridColumns: Int = 2
 ) {
-    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
-    val layout = DeviceConfiguration.fromWindowSizeClass(windowSizeClass)
-
-    val staggeredColumns = when(layout) {
-        DeviceConfiguration.MOBILE_PORTRAIT -> 2
-        DeviceConfiguration.MOBILE_LANDSCAPE -> 3
-        DeviceConfiguration.TABLET_PORTRAIT -> 4
-        DeviceConfiguration.TABLET_LANDSCAPE -> 6
-        DeviceConfiguration.DESKTOP -> 8
-    }
-
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
@@ -179,7 +195,7 @@ fun MainScreen(
 
             LazyVerticalStaggeredGrid(
                 state = verticalScrollState,
-                columns = StaggeredGridCells.Fixed(staggeredColumns)
+                columns = StaggeredGridCells.Fixed(gridColumns)
             ) {
                 if(pinnedTasks.isNotEmpty()) {
                     item(span = StaggeredGridItemSpan.FullLine) {
@@ -258,6 +274,15 @@ fun MainScreen(
                 }
             }
 
+            if(state.tasks.isEmpty()) {
+                Text(
+                    stringResource(R.string.task_list_button_to_create_new_task),
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(10.dp)
+                )
+            }
+
             val lifecycleScope = rememberCoroutineScope()
             this@Column.AnimatedVisibility(
                 visible = showGoBackUpButton,
@@ -320,6 +345,7 @@ private fun Preview() {
     PublicTakeHomeTheme {
         MainScreen(
             state = mainState,
+            gridColumns = 2,
             onAction = {}
         )
     }

@@ -91,6 +91,14 @@ class MainViewModel(
                 pinSelectedTasks()
             }
 
+            MainAction.OnRefresh -> {
+                viewModelScope.launch {
+                    _state.value = _state.value.copy(isLoading = true)
+                    taskRepository.refreshTasks()
+                    _state.value = _state.value.copy(isLoading = false)
+                }
+            }
+
             else -> {}
         }
     }

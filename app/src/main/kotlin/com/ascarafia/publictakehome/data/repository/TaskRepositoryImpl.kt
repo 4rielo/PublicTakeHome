@@ -24,7 +24,7 @@ class TaskRepositoryImpl(
     private val repositoryScope: CoroutineScope
 ) : TaskRepository {
 
-    //Tasks remote list are updated/synched when start, and after 5 minutes of repository flow not being subscribed to
+    //Tasks remote list are updated/synced when start, and after 5 minutes of repository flow not being subscribed to
     private val _taskList = MutableStateFlow<List<Task>>(emptyList())
     val taskList = _taskList
         .onStart {
@@ -76,6 +76,11 @@ class TaskRepositoryImpl(
         } catch (e: Exception) {
             Result.Error(DataError.Local.UNKNOWN)
         }
+    }
+
+    override suspend fun refreshTasks() {
+        sync()
+        updateTaskList()
     }
 
     private suspend fun updateTaskList() {
@@ -146,7 +151,6 @@ class TaskRepositoryImpl(
                     tasksRemoteDataSource.upsertTask(remoteTask)
                 }
 
-                println("********** Needs to update local tasks: $localTasksToUpdate")
                 for (localTask in localTasksToUpdate) {
                     tasksLocalDataSource.upsertTask(localTask)
                 }

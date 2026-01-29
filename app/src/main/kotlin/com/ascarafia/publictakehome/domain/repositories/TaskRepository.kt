@@ -10,4 +10,6 @@ interface TaskRepository {
     suspend fun getTask(id: String): Task?
     suspend fun upsertTask(task: Task): Result<Unit, DataError>
     suspend fun deleteTask(id: String): Result<Unit, DataError>
+
+    suspend fun refreshTasks()
 }

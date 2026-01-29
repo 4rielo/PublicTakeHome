@@ -13,4 +13,6 @@ sealed interface MainAction {
     object OnPinTasksClick: MainAction
     object OnUnPinTasksClick: MainAction
     object OnCancelClick: MainAction
+
+    object OnRefresh: MainAction
 }

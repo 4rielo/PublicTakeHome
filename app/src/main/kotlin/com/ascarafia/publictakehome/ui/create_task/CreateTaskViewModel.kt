@@ -39,7 +39,6 @@ class CreateTaskViewModel(
     val state = _state
         .onStart {
             if (!hasLoadedInitialData) {
-                /** Load initial data here **/
                 taskId?.let {
                     val task = taskRepository.getTask(it)
                     _state.value = _state.value.copy(
