@@ -9,10 +9,11 @@ data class Task(
     val isPinned: Boolean = false,
     val isDeleted: Boolean = false,
     val lastUpdated: String,
-): Comparable<Task> {
-    override fun compareTo(other: Task): Int {
-        return id.compareTo(other.id)
-    }
+) {
+    override fun equals(other: Any?): Boolean =
+        other is Task && other.id == id
+
+    override fun hashCode(): Int = id.hashCode()
 
     init {
         require(title.length <= 50) {
