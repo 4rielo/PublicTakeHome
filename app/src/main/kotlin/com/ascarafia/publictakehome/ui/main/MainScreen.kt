@@ -140,9 +140,9 @@ fun MainScreen(
                 }
             }
 
-            LaunchedEffect(showGoBackUpButton) {
+            LaunchedEffect(showGoBackUpButton, state.selectionMode) {
                 if (state.showTaskPopUp == null) {
-                    onAction(MainAction.HideCreateTask(showGoBackUpButton))
+                    onAction(MainAction.HideCreateTask(showGoBackUpButton || state.selectionMode))
                 }
             }
 

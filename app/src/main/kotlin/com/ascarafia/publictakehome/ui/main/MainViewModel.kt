@@ -38,7 +38,9 @@ class MainViewModel(
             }
 
             is MainAction.OnTaskLongClick -> {
-                toggleSelection(action.taskId)
+                if(_state.value.showTaskPopUp == null) {
+                    toggleSelection(action.taskId)
+                }
             }
 
             is MainAction.OnTaskCompletedToggle -> {
