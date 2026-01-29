@@ -296,6 +296,7 @@ private fun Preview() {
                 description = "Description 1",
                 isCompleted = false,
                 createdAt = "2023-01-01",
+                lastUpdated = ""
             ),
             Task(
                 id = "2",
@@ -303,6 +304,7 @@ private fun Preview() {
                 description = "Description 2, but this is waaaaay bigger, because it takes up to a few rows.",
                 isCompleted = false,
                 createdAt = "2023-01-01",
+                lastUpdated = ""
             ),
             Task(
                 id = "3",
@@ -310,6 +312,7 @@ private fun Preview() {
                 description = "Description 3, and yes, this is slightly larger than the first one.",
                 isCompleted = false,
                 createdAt = "2023-01-01",
+                lastUpdated = ""
             ),
         )
     )

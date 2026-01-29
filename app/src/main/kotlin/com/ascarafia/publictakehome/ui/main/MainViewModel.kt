@@ -34,8 +34,10 @@ class MainViewModel(
         .onStart {
             if (!hasLoadedInitialData) {
                 /** Load initial data here **/
+                _state.value = _state.value.copy(isLoading = true)
                 getRepositoryTasks()
                 hasLoadedInitialData = true
+                _state.value = _state.value.copy(isLoading = false)
             }
         }
         .stateIn(

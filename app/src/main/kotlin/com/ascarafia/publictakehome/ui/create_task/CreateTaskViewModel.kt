@@ -8,6 +8,7 @@ import com.ascarafia.publictakehome.domain.model.DataError
 import com.ascarafia.publictakehome.domain.model.Task
 import com.ascarafia.publictakehome.domain.model.Result
 import com.ascarafia.publictakehome.domain.repositories.TaskRepository
+import com.ascarafia.publictakehome.domain.use_cases.DateTimeUtils
 import com.ascarafia.publictakehome.ui.navigation.NavigationIndex
 import com.ascarafia.publictakehome.ui.util.UserEvent
 import kotlinx.coroutines.channels.Channel
@@ -100,12 +101,13 @@ class CreateTaskViewModel(
                         val upsertResponse = taskRepository.upsertTask(
                             task?.copy(
                                 title = _state.value.title,
-                                description = _state.value.description
+                                description = _state.value.description,
                             ) ?: Task(
                                 id = UUID.randomUUID().toString(),
                                 title = _state.value.title,
                                 description = _state.value.description,
-                                createdAt = Clock.System.now().toString()
+                                createdAt = DateTimeUtils.toIsoString(Clock.System.now()),
+                                lastUpdated = DateTimeUtils.toIsoString(Clock.System.now())
                             )
                         )
                         when(upsertResponse) {

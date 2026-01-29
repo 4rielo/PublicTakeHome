@@ -85,5 +85,12 @@ dependencies {
     implementation(libs.sqlite.bundled)
     add("ksp", libs.androidx.room.compiler)
 
+    implementation(libs.ktor.core)
+    implementation(libs.ktor.client.okhttp)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.client.serialization)
+    implementation(libs.ktor.client.auth)
+    implementation(libs.ktor.client.logging)
+
     debugImplementation(libs.androidx.compose.ui.tooling)
 }

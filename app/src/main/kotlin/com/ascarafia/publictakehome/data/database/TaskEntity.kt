@@ -10,5 +10,7 @@ data class TaskEntity(
     val description: String,
     val isCompleted: Boolean = false,
     val createdAt: String,
-    val isPinned: Boolean = false
+    val isPinned: Boolean = false,
+    val isDeleted: Boolean = false,
+    val lastUpdated: String,
 )

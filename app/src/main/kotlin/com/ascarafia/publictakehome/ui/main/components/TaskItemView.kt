@@ -120,6 +120,7 @@ fun TaskItemViewPreview() {
             description = "Contenido de la tarea",
             isCompleted = false,
             createdAt = "",
+            lastUpdated = "",
             isPinned = false
         ),
         onTaskClick = {},
