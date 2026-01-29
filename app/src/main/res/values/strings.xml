@@ -1,3 +1,26 @@
 <resources>
     <string name="app_name">PublicTakeHome</string>
+    <string name="go_back">Go Back</string>
+
+    <string name="task_list_create_new_task">Create new Task</string>
+    <string name="task_list_pinned_tasks">Pinned Tasks</string>
+    <string name="task_list_other_tasks">Other Tasks</string>
+    <string name="task_list_search_hint">Search tasks...</string>
+    <string name="task_list_button_to_create_new_task">Click the button below to create a new task</string>
+
+
+    <string name="create_new_task_cancel">Cancel</string>
+    <string name="create_new_task_save">Save Task</string>
+
+    <string name="request_timeout">Ooops, it looks like your request timed out.</string>
+    <string name="too_many_requests">There seems to be an issue with your request. Please wait a moment and try again.</string>
+    <string name="no_internet">Ooops, it looks like you don\'t have internet connection.</string>
+    <string name="server">Ooops, something went wrong on our side. Please wait a moment and try again.</string>
+    <string name="serialization">Ooops, something went wrong on our side. Please wait a moment and try again.</string>
+    <string name="unauthorized">Ooops, you are not authorized to perform this action. Please check your credentials and log in again.</string>
+    <string name="forbidden">We\'re sorry, it looks like you are not authorized to perform this action.</string>
+    <string name="not_found">It looks like the resource you are looking for does not exist.</string>
+    <string name="unknown">We\'re sorry, something went wrong. Please try again later.</string>
+    <string name="disk_full">We\'re sorry, there is not enough space on your device to perform this action.</string>
+
 </resources>

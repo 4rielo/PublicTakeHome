@@ -1,0 +1,12 @@
+package com.ascarafia.publictakehome.ui.main
+
+import com.ascarafia.publictakehome.domain.model.Task
+
+data class MainState(
+    val isLoading: Boolean = false,
+    val tasks: List<Task> = emptyList(),
+    val showTaskPopUp: Task? = null,
+    val selectedIds: List<String> = emptyList(),
+    val selectionMode: Boolean = selectedIds.isNotEmpty(),
+    val searchQuery: String = "",
+)
