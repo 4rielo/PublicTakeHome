@@ -12,10 +12,12 @@ materialIcons = "1.7.8"
 navigationCompose = "2.9.1"
 kotlinSerialization = "1.10.0"
 
-activityCompose = "1.12.2"
+activityCompose = "1.12.3"
 androidx-lifecycle = "2.9.6"
 
-composeBom = "2026.01.00"
+composeBom = "2026.01.01"
+
+adaptive = "1.2.0"
 
 koin = "4.1.1"
 
@@ -43,6 +45,8 @@ androidx-compose-ui-graphics = { group = "androidx.compose.ui", name = "ui-graph
 androidx-compose-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-compose-materialIcons = { group = "androidx.compose.material", name = "material-icons-extended", version.ref = "materialIcons" }
+
+material3-adaptive = { module = "org.jetbrains.compose.material3.adaptive:adaptive", version.ref = "adaptive" }
 
 koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }

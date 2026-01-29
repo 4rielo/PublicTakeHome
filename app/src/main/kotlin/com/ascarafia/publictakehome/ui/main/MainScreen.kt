@@ -27,6 +27,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -46,6 +47,7 @@ import com.ascarafia.publictakehome.ui.main.components.MultiSelectionBanner
 import com.ascarafia.publictakehome.ui.main.components.SearchBar
 import com.ascarafia.publictakehome.ui.main.components.TaskItemView
 import com.ascarafia.publictakehome.ui.theme.PublicTakeHomeTheme
+import com.ascarafia.publictakehome.ui.util.DeviceConfiguration
 import com.ascarafia.publictakehome.ui.util.custom_animation.shakeRotation
 import kotlinx.coroutines.launch
 import org.koin.compose.viewmodel.koinViewModel
@@ -112,6 +114,17 @@ fun MainScreen(
     onAction: (MainAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val windowSizeClass = currentWindowAdaptiveInfo().windowSizeClass
+    val layout = DeviceConfiguration.fromWindowSizeClass(windowSizeClass)
+
+    val staggeredColumns = when(layout) {
+        DeviceConfiguration.MOBILE_PORTRAIT -> 2
+        DeviceConfiguration.MOBILE_LANDSCAPE -> 3
+        DeviceConfiguration.TABLET_PORTRAIT -> 4
+        DeviceConfiguration.TABLET_LANDSCAPE -> 6
+        DeviceConfiguration.DESKTOP -> 8
+    }
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top,
@@ -166,7 +179,7 @@ fun MainScreen(
 
             LazyVerticalStaggeredGrid(
                 state = verticalScrollState,
-                columns = StaggeredGridCells.Fixed(2)
+                columns = StaggeredGridCells.Fixed(staggeredColumns)
             ) {
                 if(pinnedTasks.isNotEmpty()) {
                     item(span = StaggeredGridItemSpan.FullLine) {

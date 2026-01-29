@@ -79,6 +79,8 @@ dependencies {
     implementation(libs.koin.compose.viewmodel)
     implementation(libs.koin.compose.navigation)
 
+    implementation(libs.material3.adaptive)
+
     implementation(libs.androidx.room.runtime)
     implementation(libs.sqlite.bundled)
     add("ksp", libs.androidx.room.compiler)
