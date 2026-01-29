@@ -18,9 +18,9 @@ import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import java.time.LocalDateTime
 import java.util.UUID
 import kotlin.random.Random
+import kotlin.time.Clock
 
 class CreateTaskViewModel(
     private val taskRepository: TaskRepository,
@@ -105,7 +105,7 @@ class CreateTaskViewModel(
                                 id = UUID.randomUUID().toString(),
                                 title = _state.value.title,
                                 description = _state.value.description,
-                                createdAt = LocalDateTime.now().toString()
+                                createdAt = Clock.System.now().toString()
                             )
                         )
                         when(upsertResponse) {
