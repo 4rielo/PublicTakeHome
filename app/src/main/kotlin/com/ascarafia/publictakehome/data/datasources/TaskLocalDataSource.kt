@@ -2,38 +2,55 @@ package com.ascarafia.publictakehome.data.datasources
 
 import androidx.sqlite.SQLiteException
 import com.ascarafia.publictakehome.data.database.TaskDao
-import com.ascarafia.publictakehome.data.database.TaskEntity
+import com.ascarafia.publictakehome.data.mappers.toTask
+import com.ascarafia.publictakehome.data.mappers.toTaskEntity
 import com.ascarafia.publictakehome.domain.datasources.TaskDataSource
 import com.ascarafia.publictakehome.domain.model.DataError
-import kotlinx.coroutines.flow.Flow
+import com.ascarafia.publictakehome.domain.model.EmptyResult
+import com.ascarafia.publictakehome.domain.model.Result
+import com.ascarafia.publictakehome.domain.model.Task
 
 class TaskLocalDataSource(
     private val taskDao: TaskDao
 ): TaskDataSource {
 
-    override fun getTasks(): Flow<List<TaskEntity>> {
-        return taskDao.getTasks()
-    }
-
-    override suspend fun getTask(id: String): TaskEntity? {
-        return taskDao.getTask(id)
-    }
-
-    override suspend fun upsertTask(task: TaskEntity): Result<DataError?> {
+    override suspend fun getTasks(): Result<List<Task>, DataError> {
         try {
-            taskDao.upsertTask(task)
-            return Result.success(null)
-        } catch(e: SQLiteException) {
-            return Result.success(DataError.Local.DISK_FULL)
+            val tasksList = taskDao
+                .getTasks()
+                .map { taskEntity ->
+                    taskEntity.toTask()
+                }
+            return Result.Success(tasksList)
+        } catch (e: Exception) {
+            return Result.Error(DataError.Local.UNKNOWN)
         }
     }
 
-    override suspend fun deleteTask(id: String): Result<DataError?> {
+    override suspend fun getTask(id: String): Result<Task, DataError> {
+        val task = taskDao.getTask(id)?.toTask()
+        return if(task != null) {
+            Result.Success(task)
+        } else {
+            Result.Error(DataError.Local.NOT_FOUND)
+        }
+    }
+
+    override suspend fun upsertTask(task: Task): EmptyResult<DataError> {
+        try {
+            taskDao.upsertTask(task.toTaskEntity())
+            return Result.Success(Unit)
+        } catch(e: SQLiteException) {
+            return Result.Error(DataError.Local.DISK_FULL)
+        }
+    }
+
+    override suspend fun deleteTask(id: String): EmptyResult<DataError> {
         try {
             taskDao.deleteTask(id)
-            return Result.success(null)
+            return Result.Success(Unit)
         } catch(e: SQLiteException) {
-            return Result.success(DataError.Local.DISK_FULL)
+            return Result.Error(DataError.Local.DISK_FULL)
         }
     }
 }

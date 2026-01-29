@@ -10,7 +10,9 @@ import com.ascarafia.publictakehome.domain.datasources.TaskDataSource
 import com.ascarafia.publictakehome.domain.repositories.TaskRepository
 import com.ascarafia.publictakehome.ui.create_task.CreateTaskViewModel
 import com.ascarafia.publictakehome.ui.main.MainViewModel
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import org.koin.android.ext.koin.androidApplication
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.singleOf
@@ -28,7 +30,8 @@ val viewModelsModule = module {
 }
 
 val repositoriesModule = module {
-    singleOf(::TaskRepositoryImpl) bind TaskRepository::class
+    val repositoryScope: CoroutineScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+    single { TaskRepositoryImpl(get(), repositoryScope) } bind TaskRepository::class
 }
 
 val dataSourcesModule = module {

@@ -1,12 +1,13 @@
 package com.ascarafia.publictakehome.domain.datasources
 
-import com.ascarafia.publictakehome.data.database.TaskEntity
 import com.ascarafia.publictakehome.domain.model.DataError
-import kotlinx.coroutines.flow.Flow
+import com.ascarafia.publictakehome.domain.model.EmptyResult
+import com.ascarafia.publictakehome.domain.model.Result
+import com.ascarafia.publictakehome.domain.model.Task
 
 interface TaskDataSource {
-    fun getTasks(): Flow<List<TaskEntity>>
-    suspend fun getTask(id: String): TaskEntity?
-    suspend fun upsertTask(task: TaskEntity): Result<DataError?>
-    suspend fun deleteTask(id: String): Result<DataError?>
+    suspend fun getTasks(): Result<List<Task>, DataError>
+    suspend fun getTask(id: String): Result<Task, DataError>
+    suspend fun upsertTask(task: Task): EmptyResult<DataError>
+    suspend fun deleteTask(id: String): EmptyResult<DataError>
 }

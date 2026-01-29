@@ -15,6 +15,7 @@ sealed interface DataError: TaskAppError {
 
     enum class Local: DataError {
         DISK_FULL,
+        NOT_FOUND,
         UNKNOWN
     }
 }

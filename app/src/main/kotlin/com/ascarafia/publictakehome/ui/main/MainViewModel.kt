@@ -1,6 +1,5 @@
 package com.ascarafia.publictakehome.ui.main
 
-import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ascarafia.publictakehome.domain.model.Task
@@ -164,7 +163,6 @@ class MainViewModel(
 
     private fun unPinSelectedTasks() {
         viewModelScope.launch {
-
             for (taskId in _state.value.selectedIds) {
                 val unpinnedTask: Task? = _state.value.tasks.find { it.id == taskId }?.copy(isPinned = false)
                 unpinnedTask?.let {
