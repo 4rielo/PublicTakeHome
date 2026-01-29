@@ -40,6 +40,7 @@ Good luck & please feel free to reach out with any questions!
 
 # Stack employed:
 
+* GitHub with GitFlow for version control 
 * Room database
 * Ktor/okhttp for REST API calls
 * Koin for dependency injection
