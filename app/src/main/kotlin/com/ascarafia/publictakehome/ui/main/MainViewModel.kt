@@ -1,13 +1,19 @@
 package com.ascarafia.publictakehome.ui.main
 
+import androidx.compose.runtime.collectAsState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ascarafia.publictakehome.domain.model.Task
 import com.ascarafia.publictakehome.domain.repositories.TaskRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.onStart
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MainViewModel(
@@ -15,6 +21,14 @@ class MainViewModel(
 ) : ViewModel() {
 
     private var hasLoadedInitialData = false
+
+    private val tasksList: StateFlow<List<Task>> = taskRepository
+        .getTasks()
+        .stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000L),
+            emptyList()
+        )
 
     private val _state = MutableStateFlow(MainState())
     val state = _state
@@ -30,6 +44,8 @@ class MainViewModel(
             started = SharingStarted.WhileSubscribed(5_000L),
             initialValue = MainState()
         )
+
+    private var tasksFilterJob: Job? = null
 
     fun onAction(action: MainAction) {
         when (action) {
@@ -48,6 +64,11 @@ class MainViewModel(
                     val updatedTask = action.task.copy(isCompleted = !action.task.isCompleted)
                     taskRepository.upsertTask(updatedTask)
                 }
+            }
+
+            is MainAction.OnSearchQueryChange -> {
+                _state.value = _state.value.copy(searchQuery = action.query)
+                filterTasks(action.query)
             }
 
             MainAction.OnCancelClick -> {
@@ -157,12 +178,37 @@ class MainViewModel(
 
     private fun getRepositoryTasks() {
         viewModelScope.launch {
-            taskRepository.getTasks().collect { tasks ->
+            tasksList.collect { tasks ->
                 val showTaskPopUp = tasks.find { it.id == _state.value.showTaskPopUp?.id }
                 _state.value = _state.value.copy(
                     tasks = tasks.sortedBy { it.isCompleted },
                     showTaskPopUp = showTaskPopUp
                 )
+            }
+        }
+    }
+
+    private fun filterTasks(query: String) {
+        tasksFilterJob?.cancel()
+        tasksFilterJob = viewModelScope.launch {
+            delay(500)
+            with(Dispatchers.Default) {
+                _state.update {
+                    it.copy(
+                        isLoading = true
+                    )
+                }
+                val result = tasksList.value
+                    .filter { task ->
+                        task.title.contains(query, ignoreCase = true) || task.description.contains(query, ignoreCase = true)
+                    }
+                    .sortedBy { it.isCompleted }
+                _state.update {
+                    it.copy(
+                        tasks = result,
+                        isLoading = false
+                    )
+                }
             }
         }
     }

@@ -5,6 +5,7 @@
     <string name="task_list_create_new_task">Create new Task</string>
     <string name="task_list_pinned_tasks">Pinned Tasks</string>
     <string name="task_list_other_tasks">Other Tasks</string>
+    <string name="task_list_search_hint">Search tasks...</string>
 
     <string name="create_new_task_cancel">Cancel</string>
     <string name="create_new_task_save">Save Task</string>

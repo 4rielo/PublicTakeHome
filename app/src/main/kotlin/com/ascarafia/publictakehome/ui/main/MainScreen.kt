@@ -43,6 +43,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.ascarafia.publictakehome.domain.model.Task
 import com.ascarafia.publictakehome.ui.main.components.MultiSelectionBanner
+import com.ascarafia.publictakehome.ui.main.components.SearchBar
 import com.ascarafia.publictakehome.ui.main.components.TaskItemView
 import com.ascarafia.publictakehome.ui.theme.PublicTakeHomeTheme
 import com.ascarafia.publictakehome.ui.util.custom_animation.shakeRotation
@@ -117,6 +118,17 @@ fun MainScreen(
         modifier = modifier
             .fillMaxSize()
     ) {
+        AnimatedVisibility(!state.selectionMode) {
+            SearchBar(
+                modifier = Modifier
+                    .padding(10.dp)
+                    .fillMaxWidth(),
+                searchQuery = state.searchQuery,
+                onSearchQueryChange = { onAction(MainAction.OnSearchQueryChange(it)) },
+                onImeSearch = { onAction(MainAction.OnSearchQueryChange(it)) }
+            )
+        }
+
         AnimatedVisibility(state.selectionMode) {
             MultiSelectionBanner(
                 modifier = Modifier

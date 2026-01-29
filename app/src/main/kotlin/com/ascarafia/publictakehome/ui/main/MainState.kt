@@ -7,5 +7,6 @@ data class MainState(
     val tasks: List<Task> = emptyList(),
     val showTaskPopUp: Task? = null,
     val selectedIds: List<String> = emptyList(),
-    val selectionMode: Boolean = selectedIds.isNotEmpty()
+    val selectionMode: Boolean = selectedIds.isNotEmpty(),
+    val searchQuery: String = "",
 )

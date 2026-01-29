@@ -8,6 +8,7 @@ sealed interface MainAction {
     data class OnTaskLongClick(val taskId: String): MainAction
     data class OnTaskCompletedToggle(val task: Task): MainAction
     data class OnEditTaskClick(val taskId: String): MainAction
+    data class OnSearchQueryChange(val query: String): MainAction
     object OnDeleteTasksClick: MainAction
     object OnPinTasksClick: MainAction
     object OnUnPinTasksClick: MainAction

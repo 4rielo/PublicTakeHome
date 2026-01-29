@@ -5,6 +5,7 @@
     <string name="task_list_create_new_task">Crear una Nueva Tarea</string>
     <string name="task_list_pinned_tasks">Tareas Fijadas</string>
     <string name="task_list_other_tasks">Otras Tareas</string>
+    <string name="task_list_search_hint">Buscar tareas...</string>
 
     <string name="create_new_task_cancel">Cancelar</string>
     <string name="create_new_task_save">Guardar</string>
