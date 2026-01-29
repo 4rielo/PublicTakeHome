@@ -17,3 +17,49 @@ It's up to you to decide how you want to implement the user interface, navigatio
 You're welcome to expand upon the scope of this exercise if you want to show off your skills / creativity.
 
 Good luck & please feel free to reach out with any questions!
+
+
+## IMPLEMENTATION DETAILS:
+
+# Overview of Task app details: 
+
+* Requested basic functionality completed
+---
+* Light/Dark theming
+* Adaptive design: Orientation responsiveness with grid columns count depending on device and layout (phone, tablet, desktop, portrait or landscape)
+* DeviceFirst repository implementation, and sync with remote
+* Search bar to filter by either Title or Description
+* Pinned/Unpinned tasks lists
+* "wiggle" animations for tasks while selecting them for pinning/deletion
+* Tasks can be edited/updated
+* Pull to refresh tasks list
+* Completed tasks still shown as grayed-out, can be marked as not completed again.
+* SnackBar messages for error reporting to the user
+* Staggered list of tasks
+* Scrolling task list with button to go back up
+
+# Stack employed:
+
+* Room database
+* Ktor/okhttp for REST API calls
+* Koin for dependency injection
+* Error handling with Result.Success / Result.Error
+* Compose for UI
+* Animations for a better user experience / components transition
+* Compose Navigation
+* Coroutines
+* Flow / StateFlow / Channels for reactive development.
+* Material design
+* IME action on TextFields
+
+## Design considerations:
+
+# Clean Architecture / Onion layering and SOLID principles
+
+* application: Main Application and dependency injection framework
+* domain: Business basics, with interfaces for dependency inversion (Objects depend on abstractions)
+* data: Data layer, with datasources, database, repositories, mappers, networking. 
+* ui: Presentation layer, with main App file, and packages for each section, like navigation, theming, utils, or each screen, like main and create_task
+
+ui/presentation -> domain <- data
+
