@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">PublicTakeHome</string>
+    <string name="go_back">Volver</string>
+
+    <string name="task_list_create_new_task">Crear una Nueva Tarea</string>
+    <string name="task_list_pinned_tasks">Tareas Fijadas</string>
+    <string name="task_list_other_tasks">Otras Tareas</string>
+
+    <string name="create_new_task_cancel">Cancelar</string>
+    <string name="create_new_task_save">Guardar</string>
+
+    <string name="request_timeout">Ooops, parece que se excedió el tiempo de espera de su solicitud.</string>
+    <string name="too_many_requests">Parece haber un problema con su pedido. Por favor espere un momento e intente nuevamente.</string>
+    <string name="no_internet">Ooops, parece que no tiene conexión a internet.</string>
+    <string name="server">Ooops, algo falló con el servidor. Por favor espere un momento e intente nuevamente.</string>
+    <string name="serialization">Ooops, algo falló en la aplicación. Por favor espere un momento e intente nuevamente.</string>
+    <string name="unauthorized">Ooops, parece que no está autorizado para realizar esta acción. Por favor, revise sus credenciales e inicie sesión nuevamente.</string>
+    <string name="forbidden">Lo sentimos, pero parece que no está autorizado para realizar dicha acción.</string>
+    <string name="not_found">Parece que el recurso al que está intentando acceder no existe.</string>
+    <string name="unknown">Lo sentimos, algo falló. Por favor, intente nuevamente más tarde.</string>
+    <string name="disk_full">Lo sentimos, pero parece que no hay espacio de almacenamiento en su dispositivo.</string>
+
+</resources>
