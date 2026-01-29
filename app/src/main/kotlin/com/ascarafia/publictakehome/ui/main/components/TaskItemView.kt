@@ -1,6 +1,7 @@
 package com.ascarafia.publictakehome.ui.main.components
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,28 +33,48 @@ fun TaskItemView(
     enableClick: Boolean = true,
     onTaskClick: (Task) -> Unit,
     onTaskLongClick: (Task) -> Unit,
+    isSelected: Boolean = false,
     showTaskCompletedToggle: Boolean = false,
     onTaskCompletedToggle: (Task) -> Unit = {},
     onEditTaskClicked: (Task) -> Unit = {},
-    onDeleteTaskClicked: (Task) -> Unit = {},
 ) {
+    val borderColor = if(isSelected) {
+        MaterialTheme.colorScheme.onErrorContainer
+    } else {
+        MaterialTheme.colorScheme.onSurface
+    }
+
+    val backgroundColor = if (task.isCompleted && !showTaskCompletedToggle) {
+        MaterialTheme.colorScheme.surfaceDim
+    } else {
+        MaterialTheme.colorScheme.surface
+    }
+
     Surface(
         shape = MaterialTheme.shapes.medium,
-        border = BorderStroke(2.dp, MaterialTheme.colorScheme.onSurface),
-        color = MaterialTheme.colorScheme.surface,
-        onClick = { onTaskClick(task) },
+        border = BorderStroke(2.dp, borderColor),
+        color = backgroundColor,
+        onClick = {  },
         enabled = enableClick,
         modifier = modifier
-            .padding(5.dp)
             .alpha(if (task.isCompleted && !showTaskCompletedToggle) 0.5f else 1f)
+            .padding(5.dp)
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Top,
             modifier = Modifier
+                .combinedClickable(
+                    enabled = enableClick,
+                    onClick = { onTaskClick(task) },
+                    onLongClick = { onTaskLongClick(task) }
+                )
                 .padding(10.dp)
         ) {
-            Text(task.title)
+            Text(
+                task.title,
+                style = MaterialTheme.typography.titleLarge
+            )
 
             Spacer(modifier = Modifier.height(10.dp))
 
